@@ -644,8 +644,6 @@
     // Pacote Básico — R$29 — 3 análises
     // Ex: 'BASIC-XXXX': 3
     'BASIC-0001': 3,
-     'BASIC-0002': 3,
-    'BASIC-0003': 3,
 
     // Pacote Popular — R$59 — 8 análises
     // Ex: 'POP-XXXX': 8
@@ -794,11 +792,12 @@
     goToStep('results');
 
     // Score
+    const score = Math.min(100, Math.max(0, parseInt(r.score) || 0));
     let n = 0;
     const numEl = document.getElementById('result-score');
     const tick = setInterval(() => {
       n += 2;
-      if (n >= r.score) { n = r.score; clearInterval(tick); }
+      if (n >= score) { n = score; clearInterval(tick); }
       numEl.innerHTML = n + '<span>%</span>';
     }, 20);
     document.getElementById('result-verdict').textContent = r.verdict;
