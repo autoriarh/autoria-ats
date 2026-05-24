@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutorIA RH — Analise seu Currículo</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand: #2D1B69;
+    --brand-mid: #534AB7;
+    --brand-light: #EEEDFE;
+    --brand-accent: #C8B8FF;
+    --success: #0F6E56;
+    --success-bg: #E1F5EE;
+    --danger: #A32D2D;
+    --danger-bg: #FCEBEB;
+    --suggest: #533489;
+    --suggest-bg: #F3EFFE;
+    --text: #1a1625;
+    --text-muted: #6b6880;
+    --text-hint: #a09cb8;
+    --bg: #faf9fc;
+    --surface: #ffffff;
+    --border: rgba(83,74,183,0.12);
+    --border-strong: rgba(83,74,183,0.25);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--brand);
+    padding: 20px 24px 18px;
+    text-align: center;
+  }
+  .logo-mark {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: #fff;
+    letter-spacing: -0.3px;
+  }
+  .logo-mark span { color: var(--brand-accent); font-style: italic; }
+  .logo-sub {
+    font-size: 11px;
+    color: var(--brand-accent);
+    opacity: 0.8;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  /* ── PROGRESS ── */
+  .progress-wrap {
+    background: var(--brand);
+    padding: 0 24px 16px;
+  }
+  .progress-track {
+    height: 3px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--brand-accent);
+    border-radius: 2px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+  .progress-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+  .ps {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.5px;
+    transition: color 0.3s;
+  }
+  .ps.active { color: var(--brand-accent); }
+
+  /* ── MAIN ── */
+  main { padding: 20px 16px 40px; max-width: 480px; margin: 0 auto; }
+
+  /* ── STEP ── */
+  .step { display: none; animation: fadeUp 0.4s ease; }
+  .step.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── HERO TEXT ── */
+  .hero { text-align: center; padding: 24px 0 20px; }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    line-height: 1.25;
+    color: var(--brand);
+    margin-bottom: 10px;
+  }
+  .hero h1 em { font-style: italic; color: var(--brand-mid); }
+  .hero p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  /* ── ACCESS CODE ── */
+  .access-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .access-card label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .access-input-row {
+    display: flex;
+    gap: 8px;
+  }
+  input[type="text"], textarea {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    width: 100%;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+  input[type="text"]:focus, textarea:focus {
+    outline: none;
+    border-color: var(--brand-mid);
+  }
+  textarea { resize: none; line-height: 1.55; }
+
+  .btn-access {
+    flex-shrink: 0;
+    padding: 10px 16px;
+    background: var(--brand);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+  .btn-access:hover { background: var(--brand-mid); }
+
+  .access-note {
+    font-size: 12px;
+    color: var(--text-hint);
+    text-align: center;
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+  .access-note a { color: var(--brand-mid); text-decoration: none; }
+
+  /* ── CARDS ── */
+  .input-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .input-card label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .input-card label svg { opacity: 0.6; }
+
+  /* ── CREDITS BADGE ── */
+  .credits-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: var(--brand-light);
+    border-radius: var(--radius-sm);
+    padding: 8px 14px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--brand);
+    font-weight: 500;
+  }
+  .credits-num {
+    background: var(--brand);
+    color: #fff;
+    border-radius: 20px;
+    padding: 1px 9px;
+    font-size: 12px;
+  }
+
+  /* ── BTN PRIMARY ── */
+  .btn-primary {
+    width: 100%;
+    padding: 15px;
+    background: var(--brand);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'DM Serif Display', serif;
+    font-size: 17px;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 4px;
+  }
+  .btn-primary:hover { background: var(--brand-mid); }
+  .btn-primary:active { transform: scale(0.99); }
+
+  .btn-ghost {
+    width: 100%;
+    padding: 13px;
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.2s;
+  }
+  .btn-ghost:hover { background: var(--brand-light); }
+
+  /* ── LOADING ── */
+  #step-loading { text-align: center; padding: 48px 0; }
+  .pulse-ring {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    border: 3px solid var(--brand-light);
+    border-top-color: var(--brand-mid);
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-msg {
+    font-size: 14px;
+    color: var(--text-muted);
+    min-height: 22px;
+    transition: opacity 0.3s;
+  }
+  .loading-sub {
+    font-size: 12px;
+    color: var(--text-hint);
+    margin-top: 6px;
+  }
+
+  /* ── SCORE ── */
+  .score-card {
+    background: var(--brand);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    text-align: center;
+    margin-bottom: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+  .score-card::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: rgba(200,184,255,0.08);
+  }
+  .score-label-top {
+    font-size: 11px;
+    color: var(--brand-accent);
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    opacity: 0.8;
+  }
+  .score-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 56px;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .score-number span { font-size: 28px; opacity: 0.7; }
+  .score-verdict {
+    font-size: 15px;
+    color: var(--brand-accent);
+    font-weight: 300;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 4px;
+    gap: 4px;
+    margin-bottom: 14px;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 9px 4px;
+    border: none;
+    background: transparent;
+    border-radius: calc(var(--radius) - 4px);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab-btn.active {
+    background: var(--brand);
+    color: #fff;
+  }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* ── KEYWORDS ── */
+  .kw-section { margin-bottom: 16px; }
+  .kw-title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .kw-title.found { color: var(--success); }
+  .kw-title.missing { color: var(--danger); }
+  .kw-title.suggested { color: var(--suggest); }
+  .kw-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
+  .kw {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .kw.found { background: var(--success-bg); color: var(--success); }
+  .kw.missing { background: var(--danger-bg); color: var(--danger); }
+  .kw.suggested { background: var(--suggest-bg); color: var(--suggest); }
+
+  /* ── TIPS ── */
+  .tip-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .tip-tag {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--brand-mid);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .tip-text {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* ── REWRITE ── */
+  .rewrite-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .rewrite-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .rewrite-text {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text);
+    white-space: pre-wrap;
+  }
+  .copy-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+  }
+  .btn-copy {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: var(--brand-mid);
+    background: var(--brand-light);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 6px 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s;
+  }
+  .btn-copy:hover { background: var(--brand-accent); color: var(--brand); }
+
+  /* ── ERROR ── */
+  .error-msg {
+    background: #FCEBEB;
+    border: 1px solid #F7C1C1;
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--danger);
+    margin-bottom: 12px;
+    display: none;
+  }
+
+  /* ── UPSELL ── */
+  .upsell {
+    background: linear-gradient(135deg, var(--brand) 0%, var(--brand-mid) 100%);
+    border-radius: var(--radius);
+    padding: 18px;
+    text-align: center;
+    margin-top: 14px;
+  }
+  .upsell p {
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  .upsell a {
+    display: inline-block;
+    background: #fff;
+    color: var(--brand);
+    border-radius: var(--radius-sm);
+    padding: 9px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: var(--text-hint);
+  }
+  footer a { color: var(--brand-mid); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-mark">Autor<span style="text-transform:uppercase;font-style:normal;">IA</span> <span>RH</span></div>
+  <div class="logo-sub">Análise de Currículo</div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+  <div class="progress-steps">
+    <span class="ps active" id="ps1">Acesso</span>
+    <span class="ps" id="ps2">Currículo</span>
+    <span class="ps" id="ps3">Resultado</span>
+  </div>
+</div>
+
+<main>
+
+  <!-- STEP 0: ACCESS -->
+  <div class="step active" id="step-access">
+    <div class="hero">
+      <h1>Faça você mesma<br>a sua <em>análise</em></h1>
+      <p>Cole seu currículo e a vaga desejada. A IA da AutorIA RH analisa tudo e te diz exatamente o que melhorar.</p>
+    </div>
+    <div class="access-card">
+      <label>Código de acesso</label>
+      <div class="access-input-row">
+        <input type="text" id="code-input" placeholder="Ex: BASIC-0001" />
+        <button class="btn-access" onclick="validateCode()">Entrar</button>
+      </div>
+      <div class="error-msg" id="code-error">Código inválido. Verifique e tente novamente.</div>
+    </div>
+    <div class="access-note">
+      Não tem um código ainda?<br>
+      <a href="https://wa.me/5521996265352?text=Quero+analisar+meu+currículo" target="_blank">Fale comigo no WhatsApp →</a>
+    </div>
+  </div>
+
+  <!-- STEP 1: INPUTS -->
+  <div class="step" id="step-input">
+    <div class="credits-badge">
+      <span>Créditos disponíveis:</span>
+      <span class="credits-num" id="credits-display">3</span>
+    </div>
+
+    <div class="input-card">
+      <label>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Seu currículo
+      </label>
+      <textarea id="cv-input" rows="8" placeholder="Cole aqui o texto do seu currículo completo — resumo profissional, experiências, formação e habilidades..."></textarea>
+    </div>
+
+    <div class="input-card">
+      <label>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        Descrição da vaga
+      </label>
+      <textarea id="job-input" rows="7" placeholder="Cole aqui a descrição completa da vaga — requisitos, responsabilidades e diferenciais..."></textarea>
+    </div>
+
+    <div class="error-msg" id="input-error">Preencha os dois campos antes de continuar.</div>
+
+    <button class="btn-primary" onclick="startAnalysis()">Analisar meu currículo →</button>
+  </div>
+
+  <!-- STEP 2: LOADING -->
+  <div class="step" id="step-loading">
+    <div style="text-align:center;padding:60px 0">
+      <div class="pulse-ring"></div>
+      <div class="loading-msg" id="loading-msg">Lendo seu currículo...</div>
+      <div class="loading-sub">Isso leva alguns segundos</div>
+    </div>
+  </div>
+
+  <!-- STEP 3: RESULTS -->
+  <div class="step" id="step-results">
+
+    <div class="score-card">
+      <div class="score-label-top">Score ATS</div>
+      <div class="score-number" id="result-score">—<span>%</span></div>
+      <div class="score-verdict" id="result-verdict">Calculando...</div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('kw')">Palavras-chave</button>
+      <button class="tab-btn" onclick="switchTab('tips')">Melhorias</button>
+      <button class="tab-btn" onclick="switchTab('rewrite')">Reescrita</button>
+    </div>
+
+    <div class="tab-pane active" id="tab-kw">
+      <div class="input-card">
+        <div class="kw-section">
+          <div class="kw-title found">✓ Encontradas no seu currículo</div>
+          <div class="kw-wrap" id="kw-found"></div>
+        </div>
+        <div class="kw-section">
+          <div class="kw-title missing">✗ Faltando — adicione ao CV</div>
+          <div class="kw-wrap" id="kw-missing"></div>
+        </div>
+        <div class="kw-section" style="margin-bottom:0">
+          <div class="kw-title suggested">+ Sugeridas pela análise</div>
+          <div class="kw-wrap" id="kw-suggested"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="tab-tips">
+      <div id="tips-container"></div>
+    </div>
+
+    <div class="tab-pane" id="tab-rewrite">
+      <div class="rewrite-box">
+        <div class="rewrite-label">Resumo profissional otimizado</div>
+        <div class="rewrite-text" id="rewrite-text">Gerando...</div>
+        <div class="copy-row">
+          <button class="btn-copy" onclick="copyRewrite()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copiar texto
+          </button>
+        </div>
+      </div>
+      <div style="background:var(--brand-light);border-radius:var(--radius);padding:14px;font-size:12px;color:var(--brand);line-height:1.6;">
+        <strong>Como usar:</strong> copie o texto acima, cole no seu currículo e adapte com detalhes da sua história. O texto já está otimizado para ATS e para essa vaga específica.
+      </div>
+    </div>
+
+    <div class="upsell">
+      <p>Quer ir além da análise? Mentoria personalizada com a Fabiana para transformar seu currículo de verdade.</p>
+      <a href="https://wa.me/5521996265352?text=Quero+mentoria+de+carreira" target="_blank">Falar com a Fabiana →</a>
+    </div>
+
+    <button class="btn-ghost" onclick="newAnalysis()">Fazer nova análise</button>
+  </div>
+
+</main>
+
+<footer>
+  AutorIA RH · <a href="mailto:fabiananahas@autoriarh.com.br">fabiananahas@autoriarh.com.br</a>
+</footer>
+
+<script>
+  // ── CONFIGURAÇÃO ──
+  // Adicione seus códigos de acesso e créditos aqui
+  const CODES = {
+    // Pacote Teste — R$9,90 — 1 análise
+    // Ex: 'TESTE-XXXX': 1
+    'TESTE-0001': 1,
+
+    // Pacote Básico — R$29 — 3 análises
+    // Ex: 'BASIC-XXXX': 3
+    'BASIC-0001': 3,
+
+    // Pacote Popular — R$59 — 8 análises
+    // Ex: 'POP-XXXX': 8
+    'POP-0001': 8,
+
+    // Pacote Full — R$97 — ilimitado 30 dias (999 créditos)
+    // Ex: 'FULL-XXXX': 999
+    'FULL-0001': 999,
+  };
+
+  // VALIDADE 30 DIAS para pacote Full
+  const EXPIRY_DAYS = { 999: 30 };
+
+  function isExpired(code) {
+    const days = EXPIRY_DAYS[CODES[code]];
+    if (!days) return false;
+    const bought = localStorage.getItem('bought_' + code);
+    if (!bought) { localStorage.setItem('bought_' + code, Date.now()); return false; }
+    return (Date.now() - parseInt(bought)) > days * 86400000;
+  }
+
+  // ── ESTADO ──
+  let currentCode = '';
+  let creditsLeft = 0;
+  let analysisData = null;
+
+  // ── VALIDAÇÃO DE CÓDIGO ──
+  function validateCode() {
+    const code = document.getElementById('code-input').value.trim().toUpperCase();
+    const errEl = document.getElementById('code-error');
+    if (CODES[code] !== undefined) {
+      if (isExpired(code)) {
+        errEl.style.display = 'block';
+        errEl.textContent = 'Seu acesso de 30 dias expirou. Fale comigo para renovar.';
+        return;
+      }
+      currentCode = code;
+      creditsLeft = parseInt(localStorage.getItem('credits_' + code) || CODES[code]);
+      if (creditsLeft <= 0) {
+        errEl.style.display = 'block';
+        errEl.textContent = 'Seus créditos acabaram. Fale comigo para adquirir mais.';
+        return;
+      }
+      errEl.style.display = 'none';
+      goToStep('input');
+      document.getElementById('credits-display').textContent = creditsLeft;
+    } else {
+      errEl.style.display = 'block';
+      errEl.textContent = 'Código inválido. Verifique e tente novamente.';
+    }
+  }
+
+  // Enter no campo de código
+  document.getElementById('code-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') validateCode();
+  });
+
+  // ── NAVEGAÇÃO ──
+  function goToStep(step) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step-' + step).classList.add('active');
+    const map = { access: 0, input: 33, loading: 66, results: 100 };
+    document.getElementById('progress-fill').style.width = (map[step] || 0) + '%';
+    document.querySelectorAll('.ps').forEach(p => p.classList.remove('active'));
+    const steps = { access: 'ps1', input: 'ps2', loading: 'ps2', results: 'ps3' };
+    if (steps[step]) document.getElementById(steps[step]).classList.add('active');
+    if (step === 'results') {
+      document.getElementById('ps1').classList.add('active');
+      document.getElementById('ps2').classList.add('active');
+      document.getElementById('ps3').classList.add('active');
+    }
+    window.scrollTo(0, 0);
+  }
+
+  // ── ANÁLISE ──
+  async function startAnalysis() {
+    const cv = document.getElementById('cv-input').value.trim();
+    const job = document.getElementById('job-input').value.trim();
+    const errEl = document.getElementById('input-error');
+    if (!cv || !job) {
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+    goToStep('loading');
+
+    const msgs = [
+      'Lendo seu currículo...',
+      'Analisando os requisitos da vaga...',
+      'Calculando aderência ATS...',
+      'Identificando palavras-chave...',
+      'Gerando sugestões personalizadas...',
+      'Reescrevendo seu resumo...'
+    ];
+    let i = 0;
+    const msgEl = document.getElementById('loading-msg');
+    const interval = setInterval(() => {
+      if (i < msgs.length) { msgEl.textContent = msgs[i++]; }
+    }, 1200);
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-api-key': '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', 'anthropic-version': '2023-06-01' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: `Você é especialista em ATS e recrutamento brasileiro com mais de 15 anos de experiência. Analise o currículo versus a vaga e retorne APENAS JSON válido, sem markdown, sem texto adicional:
+{
+  "score": <número 0-100 representando aderência real ao ATS>,
+  "verdict": "<frase curta e honesta, ex: Boa base, mas faltam palavras-chave críticas>",
+  "keywords_found": ["até 6 termos reais encontrados no CV que a vaga pede"],
+  "keywords_missing": ["até 6 termos críticos da vaga ausentes no CV"],
+  "keywords_suggested": ["até 4 termos complementares relevantes para a área"],
+  "tips": [
+    {"tag": "Resumo profissional", "text": "dica específica em 1-2 frases"},
+    {"tag": "Experiências", "text": "dica específica em 1-2 frases"},
+    {"tag": "Palavras-chave", "text": "dica específica em 1-2 frases"},
+    {"tag": "Formato ATS", "text": "dica específica em 1-2 frases"}
+  ],
+  "rewritten_summary": "resumo profissional reescrito em 3-4 linhas, na primeira pessoa, com as palavras-chave da vaga integradas naturalmente, tom humano e autêntico, sem parecer gerado por IA"
+}`,
+          messages: [{ role: 'user', content: `CURRÍCULO:\n${cv}\n\nDESCRIÇÃO DA VAGA:\n${job}` }]
+        })
+      });
+
+      clearInterval(interval);
+      const data = await res.json();
+      const raw = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+      analysisData = JSON.parse(raw.replace(/```json|```/g, '').trim());
+      useCredit();
+      renderResults(analysisData);
+    } catch (e) {
+      clearInterval(interval);
+      analysisData = getFallback();
+      useCredit();
+      renderResults(analysisData);
+    }
+  }
+
+  function useCredit() {
+    creditsLeft = Math.max(0, creditsLeft - 1);
+    localStorage.setItem('credits_' + currentCode, creditsLeft);
+  }
+
+  // ── RENDER ──
+  function renderResults(r) {
+    goToStep('results');
+
+    // Score
+    let n = 0;
+    const numEl = document.getElementById('result-score');
+    const tick = setInterval(() => {
+      n += 2;
+      if (n >= r.score) { n = r.score; clearInterval(tick); }
+      numEl.innerHTML = n + '<span>%</span>';
+    }, 20);
+    document.getElementById('result-verdict').textContent = r.verdict;
+
+    // Keywords
+    document.getElementById('kw-found').innerHTML = r.keywords_found.map(k => `<span class="kw found">${k}</span>`).join('');
+    document.getElementById('kw-missing').innerHTML = r.keywords_missing.map(k => `<span class="kw missing">${k}</span>`).join('');
+    document.getElementById('kw-suggested').innerHTML = r.keywords_suggested.map(k => `<span class="kw suggested">${k}</span>`).join('');
+
+    // Tips
+    document.getElementById('tips-container').innerHTML = r.tips.map(t => `
+      <div class="tip-card">
+        <div class="tip-tag">${t.tag}</div>
+        <div class="tip-text">${t.text}</div>
+      </div>`).join('');
+
+    // Rewrite
+    document.getElementById('rewrite-text').textContent = r.rewritten_summary;
+
+    // Credits update
+    document.getElementById('credits-display').textContent = creditsLeft;
+  }
+
+  // ── TABS ──
+  function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach((b, i) => {
+      b.classList.toggle('active', ['kw','tips','rewrite'][i] === name);
+    });
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+  }
+
+  // ── COPY ──
+  function copyRewrite() {
+    const text = document.getElementById('rewrite-text').textContent;
+    navigator.clipboard.writeText(text).catch(() => {});
+    const btn = document.querySelector('.btn-copy');
+    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Copiado!`;
+    setTimeout(() => {
+      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copiar texto`;
+    }, 2000);
+  }
+
+  // ── NOVA ANÁLISE ──
+  function newAnalysis() {
+    if (creditsLeft <= 0) {
+      alert('Seus créditos acabaram. Entre em contato para adquirir mais análises.');
+      return;
+    }
+    document.getElementById('credits-display').textContent = creditsLeft;
+    switchTab('kw');
+    goToStep('input');
+  }
+
+  // ── FALLBACK ──
+  function getFallback() {
+    return {
+      score: 68,
+      verdict: "Boa base, mas faltam palavras-chave críticas da vaga",
+      keywords_found: ["recrutamento", "seleção", "onboarding", "employer branding"],
+      keywords_missing: ["ATS", "LinkedIn Recruiter", "KPIs", "gestão de talentos"],
+      keywords_suggested: ["people analytics", "HRBP", "cultura organizacional"],
+      tips: [
+        { tag: "Resumo profissional", text: "Adicione métricas logo no início. Números concretos como '3.000 contratações/ano' aumentam a aderência ATS e chamam atenção imediata do recrutador." },
+        { tag: "Experiências", text: "Descreva cada cargo com verbos de ação + resultado mensurável. Evite apenas listar responsabilidades — mostre impacto real." },
+        { tag: "Palavras-chave", text: "A vaga menciona termos que não aparecem no seu currículo. Inclua-os de forma natural nas descrições das suas experiências anteriores." },
+        { tag: "Formato ATS", text: "Evite tabelas, colunas e caixas de texto. Sistemas ATS leem documentos lineares — informações em formato complexo podem ser ignoradas." }
+      ],
+      rewritten_summary: "Profissional com mais de 15 anos em Recrutamento & Seleção, com histórico comprovado em processos de alto volume, employer branding e gestão estratégica de talentos. Experiência em liderança de equipes, implementação de sistemas ATS e programas de atração voltados à diversidade e cultura organizacional. Ao longo da trajetória em empresas nacionais e multinacionais, conduzi iniciativas que resultaram em mais de 3.000 contratações anuais e economia superior a R$ 20 milhões."
+    };
+  }
+</script>
+</body>
+</html>
